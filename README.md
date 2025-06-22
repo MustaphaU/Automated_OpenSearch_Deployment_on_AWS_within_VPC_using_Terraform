@@ -69,3 +69,7 @@ https://31.XXXX.XX.XX/_dashboards
 (the public IPV4 isn used to replace the Opensearch domain endpoint). Log in with your credentials created earlier.
 
 Nginx acts as a gateway into your private VPC OpenSearch Domain.
+
+
+## References
+1. Video: [Access OpenSearch Dashboards in a VPC](https://www.youtube.com/watch?v=oyHhNIj4t7I)
