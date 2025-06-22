@@ -8,4 +8,9 @@
 * Create a Publicly accessible EC2 instance by associating a public subnet with it during set up. Should be one of the subnets asociated with your OpenSearch VPC.
 
 ## Configure Security Group Access.
-* **OpenSearch Domain Security Group:** Add an inbound rule allowing HTTPS traffic from the EC2 instance's security group
+* **OpenSearch Domain `Security Group`:** Add an inbound rule to allow HTTPs traffic from the EC2 instance's security group. (Source *custom*)
+
+* **EC2 (Nginx) `Security Group`: Add an inbound rule to allow HTTPS traffic from your current IP address. (Source *My IP*)
+
+## Prepare the EC2 instance
+* Connect to the instance via SSH
