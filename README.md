@@ -25,8 +25,11 @@ This repository provides **automated Terraform infrastructure** to deploy a secu
 git clone https://github.com/MustaphaU/opensearch_vpc.git
 cd opensearch_vpc
 
+# Make the scripts executable
+chmod +x deploy.sh cleanup.sh user_dash.sh user_data.sh
+
 # Run the automated deployment script
-./deploy.sh
+./deploy.sh 
 
 # Optional: Specify custom key pair name and region
 ./deploy.sh my-custom-key us-west-2
