@@ -26,7 +26,7 @@ git clone https://github.com/MustaphaU/opensearch_vpc.git
 cd opensearch_vpc
 
 # Make the scripts executable
-chmod +x deploy.sh cleanup.sh user_dash.sh user_data.sh
+chmod +x deploy.sh cleanup.sh user_data.sh
 
 # Run the automated deployment script
 ./deploy.sh 
