@@ -135,7 +135,7 @@ sudo cat /var/log/opensearch-proxy-setup.log
    - Ensure OpenSearch domain is in "Active" state
    - Check VPC configuration and route tables
 
-## 🧹 Cleanup
+## Cleanup
 
 To destroy all resources:
 
@@ -153,7 +153,7 @@ terraform destroy -auto-approve
 ---
 
 ## Manual Setup Guide (Alternative Approach)
-* When creating the domain (standard create), ensure to select `VPC access` under `Network` settings.
+* When creating the OpenSearch domain (standard create), ensure to select `VPC access` under `Network` settings.
 * Specify the subnets, then select a security group
 * Optionally, Enable fine-grained access control
     - Select `Create master user` if you would like to create a Master username and Master password. These credentials would be used for login to the OpenSearch dashboards later.
