@@ -223,7 +223,7 @@ terraform destroy -auto-approve
 Now you can access your OpenSearch Dashboards securely over the internet using the public IPV4 address of your EC2 Instance like so:
 
 https://31.XXXX.XX.XX/_dashboards  
-(the public IPV4 isn used to replace the Opensearch domain endpoint). Log in with your credentials created earlier.
+(the public IPV4 is used to replace the Opensearch domain endpoint). Log in with your credentials created earlier.
 
 Nginx acts as a gateway into your private VPC OpenSearch Domain.
 
