@@ -199,7 +199,7 @@ resource "aws_security_group" "ec2_sg" {
 # OpenSearch Domain with VPC configuration
 resource "aws_opensearch_domain" "vpc_domain" {
   domain_name    = var.domain_name
-  engine_version = "OpenSearch_2.7"
+  engine_version = "OpenSearch_2.19"
 
   cluster_config {
     instance_type            = "r5.large.search"
