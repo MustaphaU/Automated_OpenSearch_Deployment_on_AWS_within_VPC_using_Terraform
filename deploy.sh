@@ -49,6 +49,21 @@ else
     echo "✅ Key pair '$KEY_PAIR_NAME' already exists"
 fi
 
+# Check for OpenSearch master password
+if [ -z "$OPENSEARCH_PASSWORD" ]; then
+    echo "⚠️  OPENSEARCH_PASSWORD environment variable not set."
+    echo "Please set it with: export OPENSEARCH_PASSWORD='YourSecurePassword123!'"
+    echo "Password requirements:"
+    echo "- At least 8 characters"
+    echo "- At least one uppercase letter"
+    echo "- At least one lowercase letter" 
+    echo "- At least one number"
+    echo "- At least one special character"
+    exit 1
+fi
+
+echo "✅ OpenSearch password found in environment variable"
+
 # Update terraform.tfvars if needed
 if [ ! -f "terraform.tfvars" ]; then
     echo "📝 Creating terraform.tfvars file..."
@@ -56,11 +71,22 @@ if [ ! -f "terraform.tfvars" ]; then
 aws_region = "$REGION"
 domain_name = "opensearch-vpc-domain"
 master_username = "admin"
-master_password = "TempPassword123!"
+master_password = "$OPENSEARCH_PASSWORD"
 key_pair_name = "$KEY_PAIR_NAME"
 EOF
-    echo "✅ terraform.tfvars created"
-    echo "⚠️  Please update the master_password in terraform.tfvars before deploying to production!"
+    echo "✅ terraform.tfvars created with password from environment variable"
+else
+    # Update existing terraform.tfvars with new password
+    echo "📝 Updating terraform.tfvars with password from environment variable..."
+    if command -v sed &> /dev/null; then
+        sed -i "s/^master_password = .*/master_password = \"$OPENSEARCH_PASSWORD\"/" terraform.tfvars
+    else
+        # Fallback for systems without sed
+        grep -v "^master_password = " terraform.tfvars > terraform.tfvars.tmp
+        echo "master_password = \"$OPENSEARCH_PASSWORD\"" >> terraform.tfvars.tmp
+        mv terraform.tfvars.tmp terraform.tfvars
+    fi
+    echo "✅ terraform.tfvars updated with new password"
 fi
 
 # Initialize Terraform
@@ -107,7 +133,7 @@ echo ""
 echo "📋 Next Steps:"
 echo "1. Wait 5-10 minutes for the OpenSearch domain to become active"
 echo "2. Access the dashboard using the URL above"
-echo "3. Login with username 'admin' and your configured password"
+echo "3. Login with username 'admin' and the password you set in OPENSEARCH_PASSWORD"
 echo "4. Accept the self-signed certificate warning in your browser"
 echo ""
 echo "🔧 Troubleshooting:"
@@ -116,9 +142,10 @@ echo "- Check Nginx logs: sudo tail -f /var/log/nginx/error.log"
 echo "- Verify setup: sudo cat /var/log/opensearch-proxy-setup.log"
 echo ""
 echo "⚠️  Security Reminders:"
-echo "- Change the default password before production use"
+echo "- Use strong passwords and rotate them regularly"
 echo "- Keep your private key (${KEY_PAIR_NAME}.pem) secure"
 echo "- Monitor AWS costs and usage"
+echo "- Consider using AWS Secrets Manager for production deployments"
 
 # Clean up plan file
 rm -f tfplan

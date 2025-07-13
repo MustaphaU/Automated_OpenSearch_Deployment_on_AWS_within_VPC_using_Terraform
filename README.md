@@ -17,6 +17,7 @@ This repository provides **automated Terraform infrastructure** to deploy a secu
 1. **AWS CLI configured** with appropriate credentials
 2. **Terraform installed** (version >= 1.2.0)
 3. **EC2 Key Pair** will be created automatically
+4. **OpenSearch password** set as environment variable
 
 ### Option 1: Use the Automated Deployment Script
 
@@ -28,6 +29,9 @@ cd opensearch_vpc
 # Make the scripts executable
 chmod +x deploy.sh cleanup.sh user_data.sh
 
+# Set your OpenSearch master password
+export OPENSEARCH_PASSWORD='YourSecurePassword123!'
+
 # Run the automated deployment script
 ./deploy.sh 
 
@@ -38,6 +42,9 @@ chmod +x deploy.sh cleanup.sh user_data.sh
 ### Option 2: Manual Terraform Commands
 
 ```bash
+# Set your OpenSearch master password
+export OPENSEARCH_PASSWORD='YourSecurePassword123!'
+
 # Initialize Terraform
 terraform init
 
@@ -56,7 +63,7 @@ After deployment completes, you'll see output with:
 Dashboard URL: https://[EC2_PUBLIC_IP]/_dashboards
 Login Credentials:
   Username: admin
-  Password: TempPassword123!
+  Password: [Your OPENSEARCH_PASSWORD]
 SSH Command: ssh -i opensearch-key.pem ec2-user@[EC2_PUBLIC_IP]
 ```
 
@@ -72,6 +79,20 @@ SSH Command: ssh -i opensearch-key.pem ec2-user@[EC2_PUBLIC_IP]
 
 ## Configuration Options
 
+### Environment Variables (Recommended)
+
+Set these environment variables before running the deployment:
+
+```bash
+# Required: OpenSearch master password
+export OPENSEARCH_PASSWORD='YourSecurePassword123!'
+
+# Optional: AWS region (defaults to us-east-1)
+export AWS_DEFAULT_REGION='us-west-2'
+```
+
+### Terraform Variables File (Alternative)
+
 Edit `terraform.tfvars` to customize your deployment:
 
 ```hcl
@@ -81,6 +102,8 @@ master_username = "admin"
 master_password = "YourSecurePassword123!"
 key_pair_name = "your-key-pair-name"
 ```
+
+**Note**: When using the deployment script, the password from `OPENSEARCH_PASSWORD` environment variable will override any password in `terraform.tfvars`.
 
 ## Architecture Details
 
@@ -150,7 +173,21 @@ terraform destroy -auto-approve
 
 ## Security Considerations
 
-- **Change default passwords** before production use
+### Password Requirements
+Your OpenSearch master password must meet these requirements:
+- At least 8 characters long
+- At least one uppercase letter
+- At least one lowercase letter  
+- At least one number
+- At least one special character
+
+### General Security
+- **Use strong, unique passwords** and rotate them regularly
+- **Use AWS Secrets Manager** for production password management
+- **Implement proper SSL certificates** for production (not self-signed)
+- **Regular security updates** on EC2 instances
+- **Monitor access logs** for suspicious activity
+- **Use IAM roles** instead of hardcoded credentials where possible
 
 
 ---
