@@ -5,18 +5,18 @@
 
 set -e
 
-echo "🧹 OpenSearch VPC Cleanup Script"
+echo " OpenSearch VPC Cleanup Script"
 echo "================================="
 
 # Check if Terraform is installed
 if ! command -v terraform &> /dev/null; then
-    echo "❌ Terraform is not installed."
+    echo " Terraform is not installed."
     exit 1
 fi
 
 # Check if terraform state exists
 if [ ! -f "terraform.tfstate" ]; then
-    echo "⚠️  No Terraform state file found. Nothing to destroy."
+    echo "  No Terraform state file found. Nothing to destroy."
     exit 0
 fi
 
@@ -25,7 +25,7 @@ echo "🔍 Planning destruction..."
 terraform plan -destroy
 
 echo ""
-echo "⚠️  WARNING: This will destroy ALL resources created by this Terraform configuration!"
+echo "  WARNING: This will destroy ALL resources created by this Terraform configuration!"
 echo "This includes:"
 echo "- OpenSearch domain and all data"
 echo "- EC2 instance"
@@ -33,29 +33,29 @@ echo "- VPC and all networking components"
 echo "- Security groups"
 echo "- CloudWatch log groups"
 echo ""
-echo "💡 Make sure to backup any important data before proceeding."
+echo " Make sure to backup any important data before proceeding."
 echo ""
 
 # Ask for confirmation
 read -p "Are you absolutely sure you want to destroy all resources? (type 'yes' to confirm): " confirmation
 
 if [ "$confirmation" != "yes" ]; then
-    echo "❌ Destruction cancelled"
+    echo " Destruction cancelled"
     exit 1
 fi
 
 # Destroy infrastructure
-echo "🗑️  Destroying infrastructure..."
+echo "  Destroying infrastructure..."
 terraform destroy -auto-approve
 
 echo ""
-echo "🎉 All resources have been destroyed successfully!"
+echo " All resources have been destroyed successfully!"
 echo ""
-echo "📋 Manual cleanup (if needed):"
+echo " Manual cleanup (if needed):"
 echo "- EC2 key pair (if created by the deploy script)"
 echo "- Any manual backups you may have created"
 echo ""
-echo "💡 The private key file (.pem) has been preserved in case you need it later."
+echo " The private key file (.pem) has been preserved in case you need it later."
 
 echo ""
-echo "🧹 Cleanup completed!"
+echo " Cleanup completed!"
